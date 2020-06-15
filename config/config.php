@@ -1,3 +1,4 @@
 <?php
-define("DOCUMENT_ROOT", __DIR__ . "/../");
-define("SERVICES_DIR", DOCUMENT_ROOT . "servifces/");
+define("ROOT_DIR", $_SERVER['DOCUMENT_ROOT'] . "/../");
+define("SERVICES_DIR", ROOT_DIR . "services/");
+echo "Done!";

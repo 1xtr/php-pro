@@ -1,7 +1,7 @@
 <?php
 
 
-namespace models;
+namespace app\models;
 
 
 class Orders extends Model
