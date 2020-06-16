@@ -51,7 +51,7 @@ class Db
     }
     private function buildConnectString() {
         return sprintf(
-            '$s:host=%s;dbname=%s;charset=%s',
+            '%s:host=%s;dbname=%s;charset=%s',
             $this->DB_CONFIG['driver'],
             $this->DB_CONFIG['host'],
             $this->DB_CONFIG['dbname'],
