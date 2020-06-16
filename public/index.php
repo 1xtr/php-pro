@@ -1,12 +1,9 @@
 <?php
-require $_SERVER['DOCUMENT_ROOT'] . "config/config.php";
-require SERVICES_. "Autoloader.php";
+require $_SERVER['DOCUMENT_ROOT'] . "/../config/config.php";
+require SERVICES_DIR . "Autoloader.php";
 
-use app\services\Autoloader;
-use app\models\Product;
+spl_autoload_register([new \app\services\Autoloader(), 'loadClass']);
 
-spl_autoload_register([new Autoloader(), 'loadClass']);
+$product = new \app\models\Product();
 
-$product = new Product();
-
-var_dump($product);
+//var_dump($product);

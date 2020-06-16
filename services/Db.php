@@ -13,15 +13,20 @@ class Db
         'password' => 'A4m6E6s3R0p7E3g1',
         'charset' => 'utf8',
     ];
-    public function getConnection() {
+    public function getConnection()
+    {
         if (is_null($this->conn)) {
             $this->conn = new \PDO(
                 $this->buildConnectString(),
                 $this->DB_CONFIG['user'],
-                $this->DB_CONFIG['password']);
+                $this->DB_CONFIG['password'],
+            );
         }
-        return $this->conn;
 
+        $this->conn->setAttribute(
+            \PDO::ATTR_DEFAULT_FETCH_MODE,
+            \PDO::FETCH_ASSOC,
+        );
     }
 
     private function query(string $sql, array $params = [])
@@ -45,10 +50,12 @@ class Db
         return [];
     }
     private function buildConnectString() {
-        return sprintf( // TODO
-
-            '',
-
+        return sprintf(
+            '$s:host=%s;dbname=%s;charset=%s',
+            $this->DB_CONFIG['driver'],
+            $this->DB_CONFIG['host'],
+            $this->DB_CONFIG['dbname'],
+            $this->DB_CONFIG['charset'],
         );
     }
 }

@@ -1,7 +1,6 @@
 <?php
-namespace app\services;
 
-require __DIR__ . '/../config/config.php';
+namespace app\services;
 
 class Autoloader
 {
@@ -9,15 +8,18 @@ class Autoloader
 
     public function loadClass(string $classname)
     {
-        var_dump($classname);
         $classname = str_replace('app\\', ROOT_DIR, $classname);
-        $fileName = realpath("{$classname}{$this->fileExtension}");
-        var_dump($fileName);
-        var_dump($fileName);
-        if (file_exists($fileName)) {
-            require $fileName;
+        $filename = $classname . $this->fileExtension;
+        $filename = preg_replace('/\\\\/', '/', $filename);
+        $filename = realpath($filename);
+//        $classname = str_replace('app\\', ROOT_DIR, $classname);
+//        $filename = realpath(`$classname . $this->fileExtension`);
+        //var_dump($filename);
+        if (file_exists($filename)) {
+            require $filename;
             return true;
         }
+
         return false;
     }
 }

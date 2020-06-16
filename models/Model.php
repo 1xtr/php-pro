@@ -2,10 +2,10 @@
 
 namespace app\models;
 
-use app\interfaces\ModelInterface;
+use app\interfaces\IModel;
 use app\services\Db;
 
-abstract class Model implements ModelInterface
+abstract class Model implements IModel
 {
     protected $tableName;
     protected $db = null;
