@@ -4,6 +4,8 @@ require SERVICES_DIR . "Autoloader.php";
 
 spl_autoload_register([new \app\services\Autoloader(), 'loadClass']);
 
-$product = new \app\models\Product();
+//$product = (new \app\models\Product())->getById(1);
+$product = (new \app\models\Product())->getAll();
+var_dump($product);
 
-//var_dump($product);
+

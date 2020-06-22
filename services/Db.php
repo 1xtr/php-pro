@@ -2,8 +2,15 @@
 
 namespace app\services;
 
+use app\traits\TSingleton;
+
 class Db
 {
+    use  TSingleton;
+
+    /**
+     * @var \PDO
+     */
     private $conn = null;
     private $DB_CONFIG = [
         'driver' => 'mysql',
@@ -13,26 +20,29 @@ class Db
         'password' => 'A4m6E6s3R0p7E3g1',
         'charset' => 'utf8',
     ];
+
     public function getConnection()
     {
         if (is_null($this->conn)) {
             $this->conn = new \PDO(
                 $this->buildConnectString(),
                 $this->DB_CONFIG['user'],
-                $this->DB_CONFIG['password'],
+                $this->DB_CONFIG['password']
+            );
+            $this->conn->setAttribute(
+                \PDO::ATTR_DEFAULT_FETCH_MODE,
+                \PDO::FETCH_ASSOC,
             );
         }
 
-        $this->conn->setAttribute(
-            \PDO::ATTR_DEFAULT_FETCH_MODE,
-            \PDO::FETCH_ASSOC,
-        );
+        return $this->conn;
     }
 
     private function query(string $sql, array $params = [])
     {
         $pdoStatement = $this->getConnection()->prepare($sql);
         $pdoStatement->execute($params);
+        return $pdoStatement;
     }
 
     public function execute(string $sql, array $params = [])
@@ -40,16 +50,18 @@ class Db
         return $this->query($sql, $params)->rowCount();
     }
 
-    public function queryOne($sql)
+    public function queryOne(string $sql, array $params = [])
     {
-        return [];
+        return $this->queryAll($sql, $params)[0];
     }
 
-    public function queryAll($sql)
+    public function queryAll(string $sql, array $params = [])
     {
-        return [];
+        return $this->query($sql, $params)->fetchAll();
     }
-    private function buildConnectString() {
+
+    private function buildConnectString()
+    {
         return sprintf(
             '%s:host=%s;dbname=%s;charset=%s',
             $this->DB_CONFIG['driver'],
