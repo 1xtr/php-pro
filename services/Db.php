@@ -15,11 +15,16 @@ class Db
     private $DB_CONFIG = [
         'driver' => 'mysql',
         'host' => 'localhost',
+        'dbname' => 'shop',
+        'user' => 'shop_user',
+        'password' => 'H6=b5D8b6-F1h8+G7t6',
+        'charset' => 'utf8',
+    ];
+    /*
         'dbname' => 'php-pro',
         'user' => 'php-pro',
         'password' => 'A4m6E6s3R0p7E3g1',
-        'charset' => 'utf8',
-    ];
+    */
 
     public function getConnection()
     {
@@ -43,6 +48,13 @@ class Db
         $pdoStatement = $this->getConnection()->prepare($sql);
         $pdoStatement->execute($params);
         return $pdoStatement;
+    }
+
+    public function queryObj(string $className, string $sql, array $params = [])
+    {
+        $pdoStatement = $this->query($sql, $params);
+        $pdoStatement->setFetchMode(\PDO::FETCH_CLASS, \PDO::FETCH_PROPS_LATE, $className);
+        return $pdoStatement->fetchAll();
     }
 
     public function execute(string $sql, array $params = [])
