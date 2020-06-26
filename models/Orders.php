@@ -17,59 +17,31 @@ class Orders extends Model
         return 'orders';
     }
 
-    public function getId()
-    {
-        return $this->id;
+    public function getAllOrders(int $userID) {
+        $sql = "SELECT orders.id, orders.date, STATUS.name as status, orders.order_amount as total 
+                    FROM {$this->tableName}, order_status AS STATUS 
+                WHERE user_id = :userID AND STATUS.id = orders.status_id";
+        return $this->db->queryAll($sql, [':userID' => $userID]);
+    }
+    public function getAllOrdersItems(string $orderIDs) {
+        $sql = "SELECT ITEMS.order_id,products.name, ITEMS.quantity, products.price 
+                    FROM order_items as ITEMS, products
+                    WHERE order_id IN (:orderIDs) AND ITEMS.product_id = products.id";
+        return $this->db->queryAll($sql, [':orderIDs' => $orderIDs]);
     }
 
-    public function setId($id): Orders
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId($user_id): Orders
-    {
-        $this->user_id = $user_id;
-        return $this;
-    }
-
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    public function setDate($date): Orders
-    {
-        $this->date = $date;
-        return $this;
-    }
-
-    public function getStatusId()
-    {
-        return $this->status_id;
-    }
-
-    public function setStatusId($status_id): Orders
-    {
-        $this->status_id = $status_id;
-        return $this;
-    }
-
-    public function getTotalAmount()
-    {
-        return $this->totalAmount;
-    }
-
-    public function setTotalAmount($totalAmount): Orders
-    {
-        $this->totalAmount = $totalAmount;
-        return $this;
+    public function makeOrder(array $cart, int $userID) {
+        $sql = "INSERT INTO {$this->tableName} (user_id) VALUES (:userID)";
+        $this->db->execute($sql, [':userID' => $userID]); // создаем заказ и возвращаем его ID в базе
+        $orderID = $this->db->getLastInsertId();
+        $orderValue = [];
+        foreach ($cart as $key => $item) {
+            $orderValue[] = "($orderID, $key, $item)";
+        }
+        $orderValue = implode(',', $orderValue);
+        $sql = "INSERT INTO order_items (order_id, product_id, quantity) VALUES :orderValue";
+        $this->db->execute($sql, [':orderValue' => $orderValue]);
+        return $orderID;
     }
 
 }

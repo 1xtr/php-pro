@@ -24,11 +24,15 @@ class Product extends Model
                     :desc,
                     :imageID,
                 )";
-        return $this->db->execute($sql);
+        return $this->db->execute($sql, [
+            ':name' => $name,
+            ':price' => $price,
+            ':desc' => $desc,
+            ':imageID' => $imageID]);
     }
 
     public function getProductQttByID(int $productID) {
         $sql = "SELECT ITEM.quantity FROM {$this->tableName} as ITEM WHERE ITEM.id = :productID";
-        return $this->db->queryOne($sql);
+        return $this->db->queryOne($sql, [':productID' => $productID]);
     }
 }

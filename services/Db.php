@@ -50,6 +50,10 @@ class Db
         return $pdoStatement;
     }
 
+    public function getLastInsertId() :int {
+        return $this->getConnection()->lastInsertId();
+    }
+
     public function queryObj(string $className, string $sql, array $params = [])
     {
         $pdoStatement = $this->query($sql, $params);
